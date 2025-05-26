@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Virtual Labubu</title>
+  <link rel="icon" href="img/logo.png" type="image/png" />
+  <!-- Tailwind via CDN for quick start & instant responsiveness -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Custom Tailwind config (optional) -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            pixel: [
+              "'Press Start 2P'",
+              "system-ui",
+              "sans-serif",
+            ],
+          },
+          screens: {
+            '2xl': '1536px',
+            '3xl': '1920px',
+            '4xl': '2560px'
+          },
+        },
+      },
+    };
+  </script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<body class="h-full bg-gradient-to-b from-amber-50 to-orange-50 font-pixel text-sm selection:bg-amber-400 selection:text-white">
+  <!-- Navigation Bar -->
+  <nav class="bg-gradient-to-r from-amber-700 to-orange-600 text-white shadow-md">
+    <div class="container mx-auto flex items-center justify-between p-4">
+      <div class="flex items-center gap-3">
+        <img
+          src="img/logo.png"
+          alt="Labubu Logo"
+          class="rounded-lg shadow w-10 h-10 object-contain"
+        />
+        <span class="font-bold text-lg md:text-xl tracking-wide">Virtual Labubu</span>
+      </div>
+      <button id="music-play-btn" class="absolute left-[35%] transform -translate-x-1/2 bg-amber-500 hover:bg-amber-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md transition-all">
+        <span class="flex items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+          </svg>
+          Play Music
+        </span>
+      </button>
+      <a href="https://x.com/VirtualLabubu" target="_blank" class="absolute left-1/2 transform -translate-x-1/2 hidden md:block">
+        <img
+          src="img/twitter.png"
+          alt="Twitter/X"
+          class="rounded-full shadow-md w-10 h-10 object-contain hover:opacity-80 transition-opacity"
+          title="Visit us on X/Twitter"
+        />
+      </a>
+      <ul class="hidden md:flex gap-6 font-semibold tracking-wide">
+        <li><button class="nav-link" data-target="screen-room">Pet</button></li>
+        <li><button class="nav-link" data-target="screen-shop">Shop</button></li>
+        <li><button class="nav-link" data-target="screen-select">Pets</button></li>
+        <li><button class="nav-link" data-target="screen-achievements">Achievements</button></li>
+        <li><button class="nav-link" data-target="screen-help">Help</button></li>
+        <li><button class="nav-link" data-target="screen-settings">Settings</button></li>
+      </ul>
+      <button id="mobileMenuBtn" class="md:hidden focus:outline-none">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-8 h-8"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3.75 5.25h16.5m-16.5 6h16.5m-16.5 6h16.5"
+          />
+        </svg>
+      </button>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-amber-600">
+      <ul class="flex flex-col gap-4 p-4 text-white font-semibold">
+        <li><button class="nav-link" data-target="screen-room">Pet</button></li>
+        <li><button class="nav-link" data-target="screen-shop">Shop</button></li>
+        <li><button class="nav-link" data-target="screen-select">Pets</button></li>
+        <li><button class="nav-link" data-target="screen-achievements">Achievements</button></li>
+        <li><button class="nav-link" data-target="screen-help">Help</button></li>
+        <li><button class="nav-link" data-target="screen-settings">Settings</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Application Container -->
+  <main id="app" class="container mx-auto py-12 px-4 md:px-6 2xl:max-w-7xl 3xl:max-w-[1800px] 4xl:max-w-[2200px]">
+    <!-- SCREEN: PET SELECTION -->
+    <section id="screen-select" class="">
+      <h1 class="text-center text-2xl md:text-3xl font-bold mb-10">Choose your Labubu</h1>
+      <div id="gridPets" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 3xl:grid-cols-10 4xl:grid-cols-12 gap-4 max-w-[2000px] mx-auto"></div>
+    </section>
+
+    <!-- SCREEN: PET ROOM (hidden by default) -->
+    <section id="screen-room" class="hidden">
+      <div class="flex flex-col lg:flex-row 2xl:gap-24 3xl:gap-32 4xl:gap-40 mt-8 3xl:mt-12 4xl:mt-16">
+        <!-- Left Column: Pet + Room Background -->
+        <div class="flex-1 flex flex-col items-center gap-8 2xl:max-w-[60%] 3xl:max-w-[65%]">
+          <div id="pet-room" class="relative w-full max-w-6xl h-96 sm:h-112 md:h-144 2xl:h-[500px] 3xl:h-[600px] 4xl:h-[700px] rounded-xl shadow-lg p-8 overflow-hidden" style="background-image: url('img/background.png'); background-size: cover; background-position: center;">
+            <!-- Room background items (will be added dynamically) -->
+            <div id="room-items" class="absolute inset-0 z-0"></div>
+            
+            <!-- Pet sprite -->
+            <div class="absolute bottom-0 left-0 right-0 z-10 flex justify-center pb-0 mb-0">
+              <img
+                id="petSprite"
+                src="https://via.placeholder.com/150x150?text=Labubu"
+                class="transition-all duration-300 h-32 md:h-48 2xl:h-64 3xl:h-80 4xl:h-96 object-contain max-h-full"
+                alt="Selected Labubu"
+              />
+            </div>
+            
+            <!-- Growth stage indicator -->
+            <div class="absolute top-2 right-2 bg-white/80 backdrop-blur-sm rounded-lg px-2 py-1 text-[10px] shadow">
+              <span id="growth-stage">Baby</span>
+            </div>
+          </div>
+          
+          <!-- Action buttons -->
+          <div class="flex flex-wrap justify-center gap-3 2xl:gap-5 3xl:gap-6 4xl:gap-8 2xl:mt-6 3xl:mt-8 4xl:mt-10">
+            <button class="action-btn flex items-center gap-2 2xl:text-lg 3xl:text-xl 4xl:text-2xl 2xl:px-6 3xl:px-8 4xl:px-10 2xl:py-3 3xl:py-4 4xl:py-5" data-action="feed" data-stat="hunger">
+              <img src="img/pet_youch/feed.png" class="w-8 h-8 2xl:w-10 2xl:h-10 3xl:w-12 3xl:h-12 4xl:w-14 4xl:h-14 object-contain" alt="Feed" />
+              <span>Feed</span>
+            </button>
+            <button class="action-btn flex items-center gap-2 2xl:text-lg 3xl:text-xl 4xl:text-2xl 2xl:px-6 3xl:px-8 4xl:px-10 2xl:py-3 3xl:py-4 4xl:py-5" data-action="drink" data-stat="thirst">
+              <img src="img/pet_youch/drink.png" class="w-8 h-8 2xl:w-10 2xl:h-10 3xl:w-12 3xl:h-12 4xl:w-14 4xl:h-14 object-contain" alt="Drink" />
+              <span>Drink</span>
+            </button>
+            <button class="action-btn flex items-center gap-2 2xl:text-lg 3xl:text-xl 4xl:text-2xl 2xl:px-6 3xl:px-8 4xl:px-10 2xl:py-3 3xl:py-4 4xl:py-5" data-action="play" data-stat="happy">
+              <img src="img/pet_youch/Play.png" class="w-8 h-8 2xl:w-10 2xl:h-10 3xl:w-12 3xl:h-12 4xl:w-14 4xl:h-14 object-contain" alt="Play" />
+              <span>Play</span>
+            </button>
+            <button class="action-btn flex items-center gap-2 2xl:text-lg 3xl:text-xl 4xl:text-2xl 2xl:px-6 3xl:px-8 4xl:px-10 2xl:py-3 3xl:py-4 4xl:py-5" data-action="brush" data-stat="happy">
+              <img src="img/pet_youch/brush.png" class="w-8 h-8 2xl:w-10 2xl:h-10 3xl:w-12 3xl:h-12 4xl:w-14 4xl:h-14 object-contain" alt="Brush" />
+              <span>Brush</span>
+            </button>
+            <button class="action-btn flex items-center gap-2 2xl:text-lg 3xl:text-xl 4xl:text-2xl 2xl:px-6 3xl:px-8 4xl:px-10 2xl:py-3 3xl:py-4 4xl:py-5" data-action="sleep" data-stat="sleep">
+              <img src="img/pet_youch/sleep.png" class="w-8 h-8 2xl:w-10 2xl:h-10 3xl:w-12 3xl:h-12 4xl:w-14 4xl:h-14 object-contain" alt="Sleep" />
+              <span>Sleep</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Right Column: Stats -->
+        <div class="flex-1 space-y-5 2xl:space-y-7 3xl:space-y-8 4xl:space-y-10 2xl:max-w-[40%] 3xl:max-w-[35%]">
+          <div class="stat">
+            <div class="flex justify-between">
+              <div class="stat-label 2xl:text-lg 3xl:text-xl 4xl:text-2xl">Happy</div>
+              <div class="stat-value text-[10px] 2xl:text-sm 3xl:text-base 4xl:text-lg" id="value-happy">75%</div>
+            </div>
+            <div class="bar 2xl:h-5 3xl:h-6 4xl:h-7"><div id="bar-happy" class="bar-fill bg-amber-500"></div></div>
+          </div>
+          <div class="stat">
+            <div class="flex justify-between">
+              <div class="stat-label 2xl:text-lg 3xl:text-xl 4xl:text-2xl">Hunger</div>
+              <div class="stat-value text-[10px] 2xl:text-sm 3xl:text-base 4xl:text-lg" id="value-hunger">75%</div>
+            </div>
+            <div class="bar 2xl:h-5 3xl:h-6 4xl:h-7"><div id="bar-hunger" class="bar-fill bg-orange-500"></div></div>
+          </div>
+          <div class="stat">
+            <div class="flex justify-between">
+              <div class="stat-label 2xl:text-lg 3xl:text-xl 4xl:text-2xl">Thirst</div>
+              <div class="stat-value text-[10px] 2xl:text-sm 3xl:text-base 4xl:text-lg" id="value-thirst">75%</div>
+            </div>
+            <div class="bar 2xl:h-5 3xl:h-6 4xl:h-7"><div id="bar-thirst" class="bar-fill bg-amber-400"></div></div>
+          </div>
+          <div class="stat">
+            <div class="flex justify-between">
+              <div class="stat-label 2xl:text-lg 3xl:text-xl 4xl:text-2xl">Sleep</div>
+              <div class="stat-value text-[10px] 2xl:text-sm 3xl:text-base 4xl:text-lg" id="value-sleep">75%</div>
+            </div>
+            <div class="bar 2xl:h-5 3xl:h-6 4xl:h-7"><div id="bar-sleep" class="bar-fill bg-amber-600"></div></div>
+          </div>
+          <div class="stat">
+            <div class="flex justify-between">
+              <div class="stat-label 2xl:text-lg 3xl:text-xl 4xl:text-2xl">Growth</div>
+              <div class="stat-value text-[10px] 2xl:text-sm 3xl:text-base 4xl:text-lg" id="value-growth">1%</div>
+            </div>
+            <div class="bar 2xl:h-5 3xl:h-6 4xl:h-7"><div id="bar-growth" class="bar-fill bg-amber-700 w-1/12"></div></div>
+          </div>
+          <div class="flex items-center gap-3 pt-4">
+            <img src="img/coin.png" class="inline-block w-6 h-6 2xl:w-8 2xl:h-8 3xl:w-10 3xl:h-10 4xl:w-12 4xl:h-12 object-contain" alt="Labubu Coins" />
+            <span id="coins" class="text-xl 2xl:text-2xl 3xl:text-3xl 4xl:text-4xl font-bold">0</span>
+            <span class="opacity-70 2xl:text-lg 3xl:text-xl 4xl:text-2xl">$Labubu</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN: SHOP -->
+    <section id="screen-shop" class="hidden">
+      <h1 class="text-center text-2xl md:text-3xl 2xl:text-4xl 3xl:text-5xl 4xl:text-6xl font-bold mb-4 2xl:mb-6 3xl:mb-8 4xl:mb-10">Labubu Shop</h1>
+      
+      <!-- Coins display -->
+      <div class="flex items-center justify-center gap-3 mb-8 2xl:mb-10 3xl:mb-12 4xl:mb-14">
+        <img src="img/coin.png" class="inline-block w-6 h-6 2xl:w-8 2xl:h-8 3xl:w-10 3xl:h-10 4xl:w-12 4xl:h-12 object-contain" alt="Labubu Coins" />
+        <span id="shop-coins" class="text-xl 2xl:text-2xl 3xl:text-3xl 4xl:text-4xl font-bold">0</span>
+        <span class="opacity-70 2xl:text-lg 3xl:text-xl 4xl:text-2xl">$Labubu</span>
+      </div>
+      
+      <!-- Shop tabs -->
+      <div class="flex justify-center mb-6 2xl:mb-8 3xl:mb-10 4xl:mb-12">
+        <div class="flex bg-amber-100 rounded-lg overflow-hidden">
+          <button class="shop-tab px-4 py-2 2xl:px-6 2xl:py-3 3xl:px-8 3xl:py-4 4xl:px-10 4xl:py-5 2xl:text-lg 3xl:text-xl 4xl:text-2xl bg-amber-600 text-white" data-tab="interior">Interior</button>
+          <button class="shop-tab px-4 py-2 2xl:px-6 2xl:py-3 3xl:px-8 3xl:py-4 4xl:px-10 4xl:py-5 2xl:text-lg 3xl:text-xl 4xl:text-2xl bg-amber-500 text-white" data-tab="accessories">Accessories</button>
+          <button class="shop-tab px-4 py-2 2xl:px-6 2xl:py-3 3xl:px-8 3xl:py-4 4xl:px-10 4xl:py-5 2xl:text-lg 3xl:text-xl 4xl:text-2xl bg-amber-400 text-white" data-tab="boosts">Boosts</button>
+        </div>
+      </div>
+      
+      <!-- Shop items grid -->
+      <div class="shop-content" id="shop-interior">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 3xl:grid-cols-8 4xl:grid-cols-10 gap-4 2xl:gap-6 3xl:gap-8 4xl:gap-10 max-w-[2000px] mx-auto">
+          <!-- Interior items will be generated here -->
+        </div>
+      </div>
+      
+      <div class="shop-content hidden" id="shop-accessories">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 3xl:grid-cols-8 4xl:grid-cols-10 gap-4 2xl:gap-6 3xl:gap-8 4xl:gap-10 max-w-[2000px] mx-auto">
+          <!-- Accessories will be generated here -->
+        </div>
+      </div>
+      
+      <div class="shop-content hidden" id="shop-boosts">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 3xl:grid-cols-8 4xl:grid-cols-10 gap-4 2xl:gap-6 3xl:gap-8 4xl:gap-10 max-w-[2000px] mx-auto">
+          <!-- Boosts will be generated here -->
+          <!-- Тестовые элементы для отображения бустов -->
+          <div class="bg-amber-50/80 backdrop-blur-sm rounded-lg p-3 shadow-md flex flex-col items-center">
+            <img src="img/shop/Boosts/2x_Coins.png" class="w-16 h-16 mb-2 object-contain" alt="2x Coins" />
+            <h3 class="font-bold text-xs text-center">2x Coins (10 min)</h3>
+            <div class="flex items-center mt-2 mb-1">
+              <img src="img/coin.png" class="inline-block w-4 h-4 mr-1 object-contain" alt="Coins" />
+              <span class="text-xs">100</span>
+            </div>
+            <button class="text-xs bg-amber-600 hover:bg-amber-700 text-white px-2 py-1 rounded w-full">Use Boost</button>
+          </div>
+          
+          <div class="bg-amber-50/80 backdrop-blur-sm rounded-lg p-3 shadow-md flex flex-col items-center">
+            <img src="img/shop/Boosts/Growth_Boost.png" class="w-16 h-16 mb-2 object-contain" alt="Growth Boost" />
+            <h3 class="font-bold text-xs text-center">Growth Boost</h3>
+            <div class="flex items-center mt-2 mb-1">
+              <img src="img/coin.png" class="inline-block w-4 h-4 mr-1 object-contain" alt="Coins" />
+              <span class="text-xs">50</span>
+            </div>
+            <button class="text-xs bg-amber-600 hover:bg-amber-700 text-white px-2 py-1 rounded w-full">Use Boost</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN: ACHIEVEMENTS -->
+    <section id="screen-achievements" class="hidden">
+      <h1 class="text-center text-2xl md:text-3xl 2xl:text-4xl 3xl:text-5xl 4xl:text-6xl font-bold mb-8 2xl:mb-10 3xl:mb-12 4xl:mb-14">Achievements</h1>
+      
+      <div class="max-w-3xl 2xl:max-w-5xl 3xl:max-w-6xl 4xl:max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 gap-4 2xl:gap-6 3xl:gap-8 4xl:gap-10" id="achievements-list">
+        <!-- Achievements will be generated here -->
+      </div>
+    </section>
+
+    <!-- SCREEN: HELP -->
+    <section id="screen-help" class="hidden">
+      <h1 class="text-center text-2xl md:text-3xl 2xl:text-4xl 3xl:text-5xl 4xl:text-6xl font-bold mb-8 2xl:mb-10 3xl:mb-12 4xl:mb-14">Help & Tutorial</h1>
+      
+      <div class="max-w-3xl 2xl:max-w-4xl 3xl:max-w-5xl 4xl:max-w-6xl mx-auto space-y-6 2xl:space-y-8 3xl:space-y-10 4xl:space-y-12 p-4 2xl:p-6 3xl:p-8 4xl:p-10">
+        <div class="bg-amber-50/80 backdrop-blur-sm rounded-lg p-4 shadow-md">
+          <h2 class="text-lg font-bold mb-2">Welcome to Labubu!</h2>
+          <p>Labubu is a pixel pet game where you take care of your virtual friend. Feed, play, and care for your Labubu to earn coins and unlock new items!</p>
+        </div>
+        
+        <div class="bg-amber-50/80 backdrop-blur-sm rounded-lg p-4 shadow-md">
+          <h2 class="text-lg font-bold mb-2">Basic Controls</h2>
+          <ul class="list-disc pl-5 space-y-2">
+            <li><strong>Feed</strong> - Give your Labubu food when they're hungry</li>
+            <li><strong>Drink</strong> - Give your Labubu water when they're thirsty</li>
+            <li><strong>Play</strong> - Play with your Labubu to make them happy</li>
+            <li><strong>Brush</strong> - Groom your Labubu to increase happiness</li>
+            <li><strong>Sleep</strong> - Let your Labubu rest when they're tired</li>
+          </ul>
+        </div>
+        
+        <div class="bg-amber-50/80 backdrop-blur-sm rounded-lg p-4 shadow-md">
+          <h2 class="text-lg font-bold mb-2">Growth & Evolution</h2>
+          <p>Your Labubu will grow very slowly over time. There are three stages of growth:</p>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Baby</strong> - The starting form</li>
+            <li><strong>Teen</strong> - The middle evolution</li>
+            <li><strong>Ultra-Mega Labubu</strong> - The final form</li>
+          </ul>
+          <p class="mt-2 text-sm italic">Reach the final form to unlock the "Labubu-Master" achievement and new pets!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN: SETTINGS -->
+    <section id="screen-settings" class="hidden">
+      <h1 class="text-center text-2xl md:text-3xl 2xl:text-4xl 3xl:text-5xl 4xl:text-6xl font-bold mb-8 2xl:mb-10 3xl:mb-12 4xl:mb-14">Settings</h1>
+      
+      <div class="max-w-md 2xl:max-w-lg 3xl:max-w-xl 4xl:max-w-2xl mx-auto space-y-6 2xl:space-y-8 3xl:space-y-10 4xl:space-y-12 p-4 2xl:p-6 3xl:p-8 4xl:p-10">
+        <div class="bg-amber-50/80 backdrop-blur-sm rounded-lg p-4 shadow-md">
+          <h2 class="text-lg font-bold mb-4">Game Settings</h2>
+          
+          <div class="space-y-4">
+            <div>
+              <label class="block mb-2 font-bold text-sm">Sound</label>
+              <div class="flex items-center mb-2">
+                <input type="checkbox" id="sound-toggle" class="w-4 h-4">
+                <label for="sound-toggle" class="ml-2">Enable sound effects</label>
+              </div>
+              <div class="flex items-center">
+                <input type="checkbox" id="music-toggle" class="w-4 h-4">
+                <label for="music-toggle" class="ml-2">Enable background music</label>
+              </div>
+            </div>
+            
+            <div>
+              <label class="block mb-2 font-bold text-sm">Language</label>
+              <select id="language-select" class="w-full p-2 border rounded">
+                <option value="en">English</option>
+                <option value="ru">Russian</option>
+              </select>
+            </div>
+            
+            <!-- Кнопки сброса и исправления удалены по запросу пользователя -->
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Tooltip (for pet hover) -->
+  <div id="tooltip" class="hidden pointer-events-none fixed z-50 bg-amber-50/90 backdrop-blur-md rounded-lg shadow-lg p-4 w-56 text-xs"></div>
+
+  <!-- Scripts -->
+  <script src="main.js"></script>
+
+  <!-- Custom styles -->
+  <style>
+    /* Re-usable classes */
+    .action-btn {
+      background-color: rgb(217, 119, 6);
+      color: white;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      transition-property: all;
+      transition-duration: 150ms;
+    }
+    .action-btn:hover {
+      background-color: rgb(180, 83, 9);
+    }
+    .action-btn:active {
+      transform: scale(0.95);
+    }
+    .stat {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+    .stat-label {
+      font-weight: bold;
+      color: #8B5A2B;
+    }
+    .bar {
+      width: 100%;
+      height: 12px;
+      background-color: #f5f5dc;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+    
+    /* Responsive adjustments for bar height */
+    @media (min-width: 1536px) { /* 2xl breakpoint */
+      .bar {
+        height: 16px;
+        border-radius: 8px;
+        margin-top: 6px;
+      }
+      .bar-fill {
+        height: 16px;
+        border-radius: 8px;
+      }
+    }
+    
+    @media (min-width: 1920px) { /* 3xl breakpoint */
+      .bar {
+        height: 20px;
+        border-radius: 10px;
+        margin-top: 8px;
+      }
+      .bar-fill {
+        height: 20px;
+        border-radius: 10px;
+      }
+    }
+    
+    @media (min-width: 2560px) { /* 4xl breakpoint */
+      .bar {
+        height: 24px;
+        border-radius: 12px;
+        margin-top: 10px;
+      }
+      .bar-fill {
+        height: 24px;
+        border-radius: 12px;
+      }
+    }
+    .bar-fill {
+      height: 12px;
+      border-radius: 6px;
+    }
+  </style>
+  
+  <!-- Audio elements -->
+  <div class="hidden">
+    <audio id="audio-background" loop>
+      <source src="audio/background.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-buy">
+      <source src="audio/buy.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-error">
+      <source src="audio/error.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-touch">
+      <source src="audio/touch.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-achievement">
+      <source src="audio/achievement.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+</body>
+</html>
